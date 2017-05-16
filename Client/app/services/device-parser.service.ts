@@ -31,7 +31,6 @@ export class DeviceParserService {
   }];
 
   parseDevice(dev: Device): Device {
-
     var draw = this.function_map.filter(x => x.id === dev.type)[0];
     var update = this.update_map.filter(x => x.id === dev.type)[0];
 

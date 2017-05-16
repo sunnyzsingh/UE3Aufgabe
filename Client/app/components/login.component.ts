@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
+import {AuthenticationService} from "../services/authentification.service";
 
 @Component({
     moduleId: module.id,
@@ -10,12 +11,31 @@ import {NgForm} from '@angular/forms';
 export class LoginComponent {
 
     loginError: boolean = false;
+    model: any = {};
+    
 
-    constructor(private router: Router) {
+    constructor(private router: Router, private authenticationService: AuthenticationService) {
     }
 
     onSubmit(form: NgForm): void {
         //TODO Überprüfen Sie die Login-Daten über die REST-Schnittstelle und leiten Sie den Benutzer bei Erfolg auf die Overview-Seite weiter
-        this.router.navigate(['/overview']);
+        let username = form.control.value.username;
+        let password = form.control.value.password;
+
+        this.model = {username,password};
+        this.authenticationService.login(this.model.username,this.model.password).subscribe(
+            data => {
+                if(data){
+                    this.loginError = false;
+                    this.router.navigate(['/overview']);
+                }else{
+                    this.loginError = true;
+                    this.authenticationService.counterLogin();
+                   
+                }
+            },
+            error => {
+                console.log("error")
+            });
     }
 }

@@ -20,7 +20,24 @@ app.use(cors());
 
 //TODO Implementieren Sie hier Ihre REST-Schnittstelle
 /* Ermöglichen Sie wie in der Angabe beschrieben folgende Funktionen:
- *  Abrufen aller Geräte als Liste
+*/
+
+
+// Abrufen aller Geräte als Liste
+function readDevices()
+{
+}
+
+app.get('/test', function (req, res)
+{
+    fs.readFile( "resources/" + "devices.json", 'utf8', function (err, data)
+    {
+        res.end( JSON.stringify(data) );
+    });
+})
+
+
+ /*
  *  Hinzufügen eines neuen Gerätes
  *  Löschen eines vorhandenen Gerätes
  *  Bearbeiten eines vorhandenen Gerätes (Verändern des Gerätezustandes und Anpassen des Anzeigenamens)
@@ -35,6 +52,24 @@ app.use(cors());
  *      Bei der Anlage neuer Geräte wird eine neue ID benötigt. Verwenden Sie dafür eine uuid (https://www.npmjs.com/package/uuid, Bibliothek ist bereits eingebunden).
  */
 
+app.post('/onSubmit', function(req, res) {
+    readUser().catch().then(function (data) {
+        var ret = false;
+        for(var i = 0; i < data.length; i++){
+            if(data[i].username === req.body.username && data[i].password === req.body.password){
+                ret = true;
+            }
+        }
+        res.send(ret);
+    });
+});
+
+app.get("/readDevices", function (req, res) {
+    readDevices().then(function (data) {
+        res.send(data);
+    });
+});
+
 app.post("/updateCurrent", function (req, res) {
     "use strict";
     //TODO Vervollständigen Sie diese Funktion, welche den aktuellen Wert eines Gerätes ändern soll
@@ -48,22 +83,45 @@ app.post("/updateCurrent", function (req, res) {
 
 function readUser() {
     "use strict";
-    //TODO Lesen Sie die Benutzerdaten aus dem login.config File ein.
-    fs.readFile("/resources/login.config", function(err, data){
-            if(err)
-            {
-                return console.error(err);
+    var loginValues;
+    var loginValues2 = [];
+    var loginValues3 = [];
+
+    return new Promise(function (resolve,reject) {
+        fs.readFile('resources/login.config', function (err, data) {
+            if(err){
+                reject(err);
+            }else{
+                loginValues = data.toString().split("\r\n");
+                for(var i = 0; i < loginValues.length; i++){
+                    loginValues2.push(loginValues[i].split(": "));
+                }
+                for(var j = 0,k = 1; k < loginValues2.length; j += 2,k += 2){
+                    loginValues3.push({username:loginValues2[j][1],password:loginValues2[k][1]});
+                }
+                resolve(loginValues3);
             }
-            else
-            {
-                console.log("Read: ", data.toString);
-            }
+
+        })
     });
+
+
+    //TODO Lesen Sie die Benutzerdaten aus dem login.config File ein.
 }
 
 function readDevices() {
     "use strict";
     //TODO Lesen Sie die Gerätedaten aus der devices.json Datei ein.
+    return new Promise(function(resolve, reject) {
+        fs.readFile('resources/devices.json', function(err, data){
+            if (err)
+                reject(err);
+            else{
+                resolve(data.toString());
+               
+            }
+        });
+    });
     /*
      * Damit die Simulation korrekt funktioniert, müssen Sie diese mit nachfolgender Funktion starten
      *      simulation.simulateSmartHome(devices.devices, refreshConnected);

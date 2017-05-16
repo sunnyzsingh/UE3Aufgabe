@@ -20,6 +20,8 @@ import {ContinuousDeviceDetailsComponent} from "./components/continuous-device-d
 import {EnumDeviceDetailsComponent} from "./components/enum-device-details.component";
 import {BooleanDeviceDetailsComponent} from "./components/boolean-device-details.component";
 import {OverlayComponent} from "./components/overlay.component";
+import {AuthenticationService} from "./services/authentification.service";
+
 
 @NgModule({
   imports: [
@@ -48,6 +50,8 @@ import {OverlayComponent} from "./components/overlay.component";
     DatePipe,
     DeviceService,
     DeviceParserService,
+    AuthenticationService,
+  
   ],
   bootstrap: [AppComponent]
 })

@@ -29,6 +29,7 @@ var continuous_device_details_component_1 = require("./components/continuous-dev
 var enum_device_details_component_1 = require("./components/enum-device-details.component");
 var boolean_device_details_component_1 = require("./components/boolean-device-details.component");
 var overlay_component_1 = require("./components/overlay.component");
+var authentification_service_1 = require("./services/authentification.service");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -60,6 +61,7 @@ var AppModule = (function () {
                 common_1.DatePipe,
                 device_service_1.DeviceService,
                 device_parser_service_1.DeviceParserService,
+                authentification_service_1.AuthenticationService,
             ],
             bootstrap: [app_component_1.AppComponent]
         }), 

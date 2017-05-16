@@ -10,9 +10,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var device_service_1 = require("../services/device.service");
+var device_parser_service_1 = require("../services/device-parser.service");
 var DevicesComponent = (function () {
-    function DevicesComponent(deviceService) {
+    function DevicesComponent(deviceService, parserService) {
         this.deviceService = deviceService;
+        this.parserService = parserService;
         this.update = true;
         this.device_num = 0;
     }
@@ -58,6 +60,19 @@ var DevicesComponent = (function () {
             }
             _this.device_num = devices.length;
         });
+        /*this.deviceService.getDevices().subscribe
+        (
+            devices => {
+                this.devices = devices;
+                this.edit = new Array(this.devices.length);
+                for (let i = 0; i < this.devices.length; i++)
+                {
+                    this.devices[i] = this.parserService.parseDevice(devices[i]);
+                    this.edit[i] = {id: this.devices[i].id, value: false};
+                }
+                this.device_num = this.devices.length;
+            }
+        );*/
     };
     /**
      * Liest aus ob ein Gerät derzeit bearbeitet wird
@@ -135,7 +150,7 @@ var DevicesComponent = (function () {
             selector: 'my-devices',
             templateUrl: '../views/devices.component.html'
         }), 
-        __metadata('design:paramtypes', [device_service_1.DeviceService])
+        __metadata('design:paramtypes', [device_service_1.DeviceService, device_parser_service_1.DeviceParserService])
     ], DevicesComponent);
     return DevicesComponent;
 }());

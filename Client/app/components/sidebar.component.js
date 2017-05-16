@@ -9,13 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var authentification_service_1 = require("../services/authentification.service");
 var SidebarComponent = (function () {
-    function SidebarComponent() {
+    function SidebarComponent(authenticationService) {
+        this.authenticationService = authenticationService;
         this.failed_logins = 0;
         this.server_start = new Date();
     }
     SidebarComponent.prototype.ngOnInit = function () {
         //TODO Lesen Sie über die REST-Schnittstelle den Status des Servers aus und speichern Sie diesen in obigen Variablen
+        this.failed_logins = this.authenticationService.getCount();
     };
     SidebarComponent = __decorate([
         core_1.Component({
@@ -23,7 +26,7 @@ var SidebarComponent = (function () {
             selector: 'my-sidebar',
             templateUrl: '../views/sidebar.component.html'
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [authentification_service_1.AuthenticationService])
     ], SidebarComponent);
     return SidebarComponent;
 }());

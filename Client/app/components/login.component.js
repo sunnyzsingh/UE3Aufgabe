@@ -10,14 +10,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
+var authentification_service_1 = require("../services/authentification.service");
 var LoginComponent = (function () {
-    function LoginComponent(router) {
+    function LoginComponent(router, authenticationService) {
         this.router = router;
+        this.authenticationService = authenticationService;
         this.loginError = false;
+        this.model = {};
     }
     LoginComponent.prototype.onSubmit = function (form) {
+        var _this = this;
         //TODO Überprüfen Sie die Login-Daten über die REST-Schnittstelle und leiten Sie den Benutzer bei Erfolg auf die Overview-Seite weiter
-        this.router.navigate(['/overview']);
+        var username = form.control.value.username;
+        var password = form.control.value.password;
+        this.model = { username: username, password: password };
+        this.authenticationService.login(this.model.username, this.model.password).subscribe(function (data) {
+            if (data) {
+                _this.loginError = false;
+                _this.router.navigate(['/overview']);
+            }
+            else {
+                _this.loginError = true;
+                _this.authenticationService.counterLogin();
+            }
+        }, function (error) {
+            console.log("error");
+        });
     };
     LoginComponent = __decorate([
         core_1.Component({
@@ -25,7 +43,7 @@ var LoginComponent = (function () {
             selector: 'my-login',
             templateUrl: '../views/login.html'
         }), 
-        __metadata('design:paramtypes', [router_1.Router])
+        __metadata('design:paramtypes', [router_1.Router, authentification_service_1.AuthenticationService])
     ], LoginComponent);
     return LoginComponent;
 }());

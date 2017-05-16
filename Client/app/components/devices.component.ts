@@ -1,6 +1,8 @@
 import {Component, OnInit, AfterViewChecked} from '@angular/core';
 import {DeviceService} from "../services/device.service";
 import {Device} from "../model/device";
+import { Observable } from 'rxjs/Observable';
+import {DeviceParserService} from "../services/device-parser.service";
 
 declare var $: any;
 
@@ -17,8 +19,13 @@ export class DevicesComponent implements OnInit, AfterViewChecked {
 
     device_num: number = 0;
 
-    constructor(private deviceService: DeviceService) {
-    }
+    usersList: string;
+
+    constructor
+    (
+        private deviceService: DeviceService,
+        private parserService: DeviceParserService
+    ) {}
 
     ngOnInit(): void {
         this.update = true;
@@ -58,15 +65,30 @@ export class DevicesComponent implements OnInit, AfterViewChecked {
     /**
      * Liest alle Geräte aus und initialisiert ein Flag zum Editierungs-Status dieses Gerätes
      */
-    listDevices() {
-        this.deviceService.getDevices().then(devices => {
-            this.devices = devices;
-            this.edit = new Array(this.devices.length);
-            for (let i = 0; i < this.devices.length; i++) {
-                this.edit[i] = {id: this.devices[i].id, value: false};
+    listDevices()
+    {
+         this.deviceService.getDevices().then(devices => {
+             this.devices = devices;
+             this.edit = new Array(this.devices.length);
+             for (let i = 0; i < this.devices.length; i++) {
+                 this.edit[i] = {id: this.devices[i].id, value: false};
+             }
+             this.device_num = devices.length;
+         });
+
+        /*this.deviceService.getDevices().subscribe
+        (
+            devices => {
+                this.devices = devices;
+                this.edit = new Array(this.devices.length);
+                for (let i = 0; i < this.devices.length; i++)
+                {
+                    this.devices[i] = this.parserService.parseDevice(devices[i]);
+                    this.edit[i] = {id: this.devices[i].id, value: false};
+                }
+                this.device_num = this.devices.length;
             }
-            this.device_num = devices.length;
-        });
+        );*/
     }
 
     /**
